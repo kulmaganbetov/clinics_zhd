@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Наши врачи - Железнодорожная клиника{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="fw-bold mb-4">Наши врачи</h1>
+    <p class="lead text-muted mb-5">Квалифицированные специалисты с многолетним опытом</p>
+
+    <div class="row g-4">
+        {% for doctor in doctors %}
+        <div class="col-md-4 col-lg-3">
+            <div class="card h-100 border-0 shadow-sm text-center">
+                <div class="card-body py-4">
+                    {% if doctor.avatar %}
+                    <img src="{{ doctor.avatar.url }}" class="rounded-circle mb-3" alt="{{ doctor.get_full_name }}" style="width: 120px; height: 120px; object-fit: cover;">
+                    {% else %}
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 120px; height: 120px;">
+                        <i class="bi bi-person-fill text-primary display-4"></i>
+                    </div>
+                    {% endif %}
+                    <h5 class="card-title mb-1">{{ doctor.get_full_name }}</h5>
+                    {% if doctor.doctor_profile %}
+                    <p class="text-primary mb-2">{{ doctor.doctor_profile.specialization }}</p>
+                    {% if doctor.doctor_profile.category %}
+                    <span class="badge bg-light text-dark">{{ doctor.doctor_profile.category }}</span>
+                    {% endif %}
+                    {% endif %}
+                </div>
+                <div class="card-footer bg-white border-0 pb-3">
+                    <a href="{% url 'registry:appointment_create' %}?doctor={{ doctor.pk }}" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-calendar-plus me-1"></i>Записаться
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-people text-muted display-1 mb-3"></i>
+            <p class="text-muted">Информация о врачах формируется</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

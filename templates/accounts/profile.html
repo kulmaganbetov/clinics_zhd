@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}Профиль - Железнодорожная клиника{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow border-0">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        {% if user.avatar %}
+                        <img src="{{ user.avatar.url }}" class="rounded-circle mb-3" alt="{{ user.get_full_name }}" style="width: 150px; height: 150px; object-fit: cover;">
+                        {% else %}
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 150px; height: 150px;">
+                            <i class="bi bi-person-fill text-primary display-3"></i>
+                        </div>
+                        {% endif %}
+                        <h3 class="fw-bold">{{ user.get_full_name }}</h3>
+                        <span class="badge bg-primary">{{ user.get_role_display }}</span>
+                    </div>
+
+                    <hr>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">Имя пользователя</small>
+                            <p class="mb-0 fw-bold">{{ user.username }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">Email</small>
+                            <p class="mb-0 fw-bold">{{ user.email|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">Телефон</small>
+                            <p class="mb-0 fw-bold">{{ user.phone|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">ИИН</small>
+                            <p class="mb-0 fw-bold">{{ user.iin|default:"-" }}</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted">Дата рождения</small>
+                            <p class="mb-0 fw-bold">{{ user.birth_date|date:"d.m.Y"|default:"-" }}</p>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">
+                            <i class="bi bi-pencil me-2"></i>Редактировать
+                        </a>
+                        <a href="{% url 'core:dashboard' %}" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Назад
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

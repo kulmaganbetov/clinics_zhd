@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель управления - Железнодорожная клиника{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar py-4">
+            <div class="position-sticky">
+                <div class="text-center text-white mb-4">
+                    <i class="bi bi-person-circle fs-1"></i>
+                    <h6 class="mt-2">{{ user.get_full_name|default:user.username }}</h6>
+                    <span class="badge bg-light text-primary">{{ user.get_role_display }}</span>
+                </div>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'core:dashboard' %}">
+                            <i class="bi bi-speedometer2 me-2"></i>Главная
+                        </a>
+                    </li>
+                    {% if user.is_doctor or user.is_admin or user.is_nurse %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:patient_list' %}">
+                            <i class="bi bi-people me-2"></i>Пациенты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:appointment_list' %}">
+                            <i class="bi bi-calendar-check me-2"></i>Записи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:schedule_list' %}">
+                            <i class="bi bi-clock me-2"></i>Расписание
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% if user.is_patient %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:my_appointments' %}">
+                            <i class="bi bi-calendar-check me-2"></i>Мои записи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:appointment_create' %}">
+                            <i class="bi bi-calendar-plus me-2"></i>Записаться
+                        </a>
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:profile' %}">
+                            <i class="bi bi-person me-2"></i>Профиль
+                        </a>
+                    </li>
+                    {% if user.is_admin %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin/">
+                            <i class="bi bi-gear me-2"></i>Администрирование
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">Панель управления</h1>
+                <span class="text-muted">{{ "now"|date:"d.m.Y" }}</span>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Добро пожаловать в медицинскую информационную систему Железнодорожной клиники!
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

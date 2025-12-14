@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Панель врача - Железнодорожная клиника{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar py-4">
+            <div class="position-sticky">
+                <div class="text-center text-white mb-4">
+                    <i class="bi bi-person-circle fs-1"></i>
+                    <h6 class="mt-2">{{ user.get_full_name }}</h6>
+                    <span class="badge bg-light text-primary">Врач</span>
+                </div>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'core:dashboard' %}">
+                            <i class="bi bi-speedometer2 me-2"></i>Главная
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:appointment_list' %}">
+                            <i class="bi bi-calendar-check me-2"></i>Мои приёмы
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:patient_list' %}">
+                            <i class="bi bi-people me-2"></i>Пациенты
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:schedule_list' %}">
+                            <i class="bi bi-clock me-2"></i>Расписание
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:profile' %}">
+                            <i class="bi bi-person me-2"></i>Профиль
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">Панель врача</h1>
+                <span class="text-muted">{{ "now"|date:"d.m.Y" }}</span>
+            </div>
+
+            <!-- Stats -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="card dashboard-card stat-card">
+                        <div class="d-flex align-items-center">
+                            <div class="icon bg-primary-soft me-3">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                            <div>
+                                <h3 class="mb-0">{{ today_appointments.count|default:0 }}</h3>
+                                <p class="text-muted mb-0">Приёмов сегодня</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card dashboard-card stat-card">
+                        <div class="d-flex align-items-center">
+                            <div class="icon bg-warning-soft me-3">
+                                <i class="bi bi-hourglass-split"></i>
+                            </div>
+                            <div>
+                                <h3 class="mb-0">{{ appointments_count|default:0 }}</h3>
+                                <p class="text-muted mb-0">Ожидают приёма</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Today's appointments -->
+            <div class="card dashboard-card">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-day me-2"></i>Приёмы на сегодня</h5>
+                </div>
+                <div class="card-body">
+                    {% if today_appointments %}
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Время</th>
+                                    <th>Пациент</th>
+                                    <th>Тип</th>
+                                    <th>Статус</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in today_appointments %}
+                                <tr>
+                                    <td>{{ appointment.time|time:"H:i" }}</td>
+                                    <td>{{ appointment.patient.get_full_name }}</td>
+                                    <td>{{ appointment.get_appointment_type_display }}</td>
+                                    <td>
+                                        <span class="badge status-{{ appointment.status }}">
+                                            {{ appointment.get_status_display }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <a href="{% url 'registry:appointment_detail' appointment.pk %}" class="btn btn-sm btn-outline-primary">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <p class="text-muted text-center py-4">На сегодня приёмов нет</p>
+                    {% endif %}
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Личный кабинет - Железнодорожная клиника{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <nav class="col-md-3 col-lg-2 d-md-block sidebar py-4">
+            <div class="position-sticky">
+                <div class="text-center text-white mb-4">
+                    <i class="bi bi-person-circle fs-1"></i>
+                    <h6 class="mt-2">{{ user.get_full_name }}</h6>
+                    <span class="badge bg-light text-primary">Пациент</span>
+                </div>
+
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'core:dashboard' %}">
+                            <i class="bi bi-speedometer2 me-2"></i>Главная
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:my_appointments' %}">
+                            <i class="bi bi-calendar-check me-2"></i>Мои записи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'registry:appointment_create' %}">
+                            <i class="bi bi-calendar-plus me-2"></i>Записаться на приём
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'core:doctors' %}">
+                            <i class="bi bi-people me-2"></i>Наши врачи
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'accounts:profile' %}">
+                            <i class="bi bi-person me-2"></i>Профиль
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+                <h1 class="h2">Личный кабинет</h1>
+                <span class="text-muted">{{ "now"|date:"d.m.Y" }}</span>
+            </div>
+
+            <div class="row g-4">
+                <!-- Quick actions -->
+                <div class="col-md-6 col-lg-4">
+                    <a href="{% url 'registry:appointment_create' %}" class="card dashboard-card text-decoration-none text-dark h-100">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-calendar-plus text-primary display-4 mb-3"></i>
+                            <h5>Записаться на приём</h5>
+                            <p class="text-muted mb-0">Выберите врача и удобное время</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <a href="{% url 'registry:my_appointments' %}" class="card dashboard-card text-decoration-none text-dark h-100">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-calendar-check text-success display-4 mb-3"></i>
+                            <h5>Мои записи</h5>
+                            <p class="text-muted mb-0">Просмотр истории посещений</p>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <a href="{% url 'core:doctors' %}" class="card dashboard-card text-decoration-none text-dark h-100">
+                        <div class="card-body text-center py-5">
+                            <i class="bi bi-people text-info display-4 mb-3"></i>
+                            <h5>Наши врачи</h5>
+                            <p class="text-muted mb-0">Специалисты клиники</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Upcoming appointments -->
+            {% if upcoming_appointments %}
+            <div class="card dashboard-card mt-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-calendar-event me-2"></i>Предстоящие записи</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Дата</th>
+                                    <th>Время</th>
+                                    <th>Врач</th>
+                                    <th>Статус</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for appointment in upcoming_appointments %}
+                                <tr>
+                                    <td>{{ appointment.date|date:"d.m.Y" }}</td>
+                                    <td>{{ appointment.time|time:"H:i" }}</td>
+                                    <td>{{ appointment.doctor.get_full_name }}</td>
+                                    <td>
+                                        <span class="badge status-{{ appointment.status }}">
+                                            {{ appointment.get_status_display }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+</div>
+{% endblock %}

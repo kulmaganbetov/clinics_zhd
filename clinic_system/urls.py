@@ -13,6 +13,7 @@ urlpatterns = [
     path('', include('core.urls')),
     path('accounts/', include('accounts.urls')),
     path('registry/', include('registry.urls')),
+    path('chatbot/', include('chatbot.urls')),
 ]
 
 # Serve media files in development

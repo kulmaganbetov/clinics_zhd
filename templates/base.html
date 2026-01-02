@@ -86,23 +86,27 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-4">
-                    <h5><i class="bi bi-hospital me-2"></i>Железнодорожная клиника</h5>
-                    <p class="text-muted">Современная многопрофильная клиника в городе Кокшетау. Мы заботимся о вашем здоровье с 1950 года.</p>
+                    <h5><i class="bi bi-hospital me-2"></i>{{ clinic_info.name|default:"Железнодорожная клиника" }}</h5>
+                    <p class="text-muted">{{ clinic_info.description|default:"Современная многопрофильная клиника. Мы заботимся о вашем здоровье." }}</p>
                 </div>
                 <div class="col-lg-4 mb-4">
                     <h5>Контакты</h5>
                     <ul class="list-unstyled text-muted">
-                        <li><i class="bi bi-geo-alt me-2"></i>г. Кокшетау, ул. Железнодорожная, 1</li>
-                        <li><i class="bi bi-telephone me-2"></i>+7 (7162) 25-00-00</li>
-                        <li><i class="bi bi-envelope me-2"></i>info@zhd-clinic.kz</li>
+                        <li><i class="bi bi-geo-alt me-2"></i>{% if clinic_info %}г. {{ clinic_info.city }}, {{ clinic_info.address }}{% else %}г. Кокшетау{% endif %}</li>
+                        <li><i class="bi bi-telephone me-2"></i>{{ clinic_info.phone|default:"+7 (7162) 25-00-00" }}</li>
+                        <li><i class="bi bi-envelope me-2"></i>{{ clinic_info.email|default:"info@zhd-clinic.kz" }}</li>
                     </ul>
                 </div>
                 <div class="col-lg-4 mb-4">
                     <h5>Режим работы</h5>
                     <ul class="list-unstyled text-muted">
+                        {% if clinic_info.working_hours %}
+                        {{ clinic_info.working_hours|linebreaks }}
+                        {% else %}
                         <li>Пн-Пт: 8:00 - 20:00</li>
                         <li>Сб: 9:00 - 15:00</li>
                         <li>Вс: выходной</li>
+                        {% endif %}
                         <li class="mt-2"><strong>Экстренная помощь: круглосуточно</strong></li>
                     </ul>
                 </div>
@@ -110,7 +114,7 @@
             <hr class="border-secondary">
             <div class="row">
                 <div class="col-md-6 text-muted">
-                    <small>&copy; 2024 Железнодорожная клиника. Все права защищены.</small>
+                    <small>&copy; 2024 {{ clinic_info.name|default:"Железнодорожная клиника" }}. Все права защищены.</small>
                 </div>
                 <div class="col-md-6 text-md-end">
                     <a href="#" class="text-muted me-3"><i class="bi bi-facebook fs-5"></i></a>

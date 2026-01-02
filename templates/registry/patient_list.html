@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block title %}Пациенты - Железнодорожная клиника{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="h2 fw-bold">Пациенты</h1>
+        <a href="{% url 'registry:patient_create' %}" class="btn btn-primary">
+            <i class="bi bi-person-plus me-2"></i>Добавить пациента
+        </a>
+    </div>
+
+    <!-- Search -->
+    <div class="card shadow-sm border-0 mb-4">
+        <div class="card-body">
+            <form method="get" class="row g-3">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control" name="search"
+                               value="{{ request.GET.search }}"
+                               placeholder="Поиск по ФИО, ИИН или телефону...">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Найти</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Patients list -->
+    <div class="card shadow-sm border-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ФИО</th>
+                        <th>ИИН</th>
+                        <th>Дата рождения</th>
+                        <th>Пол</th>
+                        <th>Телефон</th>
+                        <th>Статус</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for patient in patients %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'registry:patient_detail' patient.pk %}" class="text-decoration-none fw-bold">
+                                {{ patient.get_full_name }}
+                            </a>
+                        </td>
+                        <td>{{ patient.iin }}</td>
+                        <td>{{ patient.birth_date|date:"d.m.Y" }}</td>
+                        <td>{{ patient.get_gender_display }}</td>
+                        <td>{{ patient.phone|default:"-" }}</td>
+                        <td>
+                            {% if patient.is_attached %}
+                            <span class="badge bg-success">Прикреплён</span>
+                            {% else %}
+                            <span class="badge bg-secondary">Не прикреплён</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'registry:patient_detail' patient.pk %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-5 text-muted">
+                            <i class="bi bi-people display-4 mb-3 d-block"></i>
+                            Пациенты не найдены
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    {% if page_obj.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                    <i class="bi bi-chevron-left"></i>
+                </a>
+            </li>
+            {% endif %}
+
+            {% for num in page_obj.paginator.page_range %}
+            <li class="page-item {% if page_obj.number == num %}active{% endif %}">
+                <a class="page-link" href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">{{ num }}</a>
+            </li>
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">
+                    <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</div>
+{% endblock %}

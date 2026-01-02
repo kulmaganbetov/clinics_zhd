@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ patient.get_full_name }} - Железнодорожная клиника{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'core:dashboard' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'registry:patient_list' %}">Пациенты</a></li>
+            <li class="breadcrumb-item active">{{ patient.get_full_name }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-lg-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center py-4">
+                    <div class="bg-primary bg-opacity-10 rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3" style="width: 100px; height: 100px;">
+                        <i class="bi bi-person-fill text-primary display-4"></i>
+                    </div>
+                    <h4 class="fw-bold">{{ patient.get_full_name }}</h4>
+                    <p class="text-muted mb-2">{{ patient.age }} лет</p>
+                    {% if patient.is_attached %}
+                    <span class="badge bg-success">Прикреплён</span>
+                    {% else %}
+                    <span class="badge bg-secondary">Не прикреплён</span>
+                    {% endif %}
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">ИИН</span>
+                        <span class="fw-bold">{{ patient.iin }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Дата рождения</span>
+                        <span>{{ patient.birth_date|date:"d.m.Y" }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Пол</span>
+                        <span>{{ patient.get_gender_display }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Телефон</span>
+                        <span>{{ patient.phone|default:"-" }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Email</span>
+                        <span>{{ patient.email|default:"-" }}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-geo-alt me-2"></i>Адрес</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block">Адрес проживания</small>
+                            <span>{{ patient.address|default:"-" }}</span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <small class="text-muted d-block">Адрес прописки</small>
+                            <span>{{ patient.registration_address|default:"-" }}</span>
+                        </div>
+                        <div class="col-md-6">
+                            <small class="text-muted d-block">Место работы</small>
+                            <span>{{ patient.workplace|default:"-" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card shadow-sm border-0 mb-4">
+                <div class="card-header bg-white">
+                    <h5 class="mb-0"><i class="bi bi-heart-pulse me-2"></i>Медицинская информация</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <small class="text-muted d-block">Группа крови</small>
+                            <span class="fw-bold">{{ patient.blood_type|default:"-" }}</span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <small class="text-muted d-block">Аллергии</small>
+                            <span {% if patient.allergies %}class="text-danger"{% endif %}>{{ patient.allergies|default:"Нет" }}</span>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <small class="text-muted d-block">Хронические заболевания</small>
+                            <span>{{ patient.chronic_diseases|default:"Нет" }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex gap-2">
+                <a href="{% url 'registry:appointment_create' %}?patient={{ patient.pk }}" class="btn btn-primary">
+                    <i class="bi bi-calendar-plus me-2"></i>Записать на приём
+                </a>
+                <a href="{% url 'registry:patient_list' %}" class="btn btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-2"></i>Назад
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "pharmacy.apps.PharmacyConfig",
     "reports.apps.ReportsConfig",
     "audit.apps.AuditConfig",
+    "chatbot.apps.ChatbotConfig",
 ]
 
 MIDDLEWARE = [

@@ -26,8 +26,6 @@ class PatientAdmin(admin.ModelAdmin):
     readonly_fields = ['attachment_date']
 
 
-
-
 @admin.register(Schedule)
 class ScheduleAdmin(admin.ModelAdmin):
     list_display = ['doctor', 'day_of_week', 'start_time', 'end_time', 'slot_duration', 'is_active']

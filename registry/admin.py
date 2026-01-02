@@ -20,9 +20,12 @@ class PatientAdmin(admin.ModelAdmin):
             'fields': ('blood_type', 'allergies', 'chronic_diseases')
         }),
         ('Прикрепление', {
-            'fields': ('is_attached', 'attachment_date')
+            'fields': ('is_attached',)
         }),
     )
+    readonly_fields = ['attachment_date']
+
+
 
 
 @admin.register(Schedule)

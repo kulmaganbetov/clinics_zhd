@@ -12,6 +12,7 @@ class HomeView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['clinic'] = ClinicInfo.objects.first()
         context['slides'] = SliderImage.objects.filter(is_active=True)
         context['services'] = Service.objects.filter(is_active=True)[:6]
         context['latest_news'] = News.objects.filter(is_published=True)[:3]

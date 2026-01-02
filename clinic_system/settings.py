@@ -15,8 +15,11 @@ SECRET_KEY = "django-insecure-i($#%1u_-q()aachlgln&vrby_w=@35rq-6xa9f=cbjau(gr=w
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
-
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '.ngrok-free.app',
+]
 
 # Application definition
 INSTALLED_APPS = [
@@ -66,6 +69,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "core.context_processors.clinic_info",
             ],
         },
     },
@@ -137,3 +141,8 @@ LOGOUT_REDIRECT_URL = 'core:home'
 # Session settings
 SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.ngrok-free.app',
+]
